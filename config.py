@@ -188,7 +188,7 @@ TERMINAL_DESCONHECIDO = "Não mapeado"
 INTERESSE = {
     "agencias": [],     # ex.: ["WILSON SONS", "MSC", "LACHMANN"]
     "terminais": [],    # ex.: ["BTP", "Santos Brasil", "Ecoporto"]
-    "mercadorias": [],  # ex.: ["SUCOS", "CARGA GERAL"]
+    "mercadorias": ["CONTEINERES CHEIOS"]
     "navios": [],       # nome ou IMO, ex.: ["MSC MELINE", "9702077"]
 }
 
