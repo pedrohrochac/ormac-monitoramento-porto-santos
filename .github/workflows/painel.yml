@@ -1,3 +1,20 @@
+      - name: Completar a cadeia de certificados da SPA
+        continue-on-error: true
+        run: |
+          set -x
+          HOST=www.portodesantos.com.br
+          openssl s_client -connect $HOST:443 -servername $HOST </dev/null 2>/dev/null \
+            | openssl x509 -outform PEM > folha.pem
+          URI=$(openssl x509 -in folha.pem -noout -text \
+            | grep -o 'CA Issuers - URI:[^ ]*' | head -1 | cut -d: -f2-)
+          echo "intermediario em: $URI"
+          curl -sL "$URI" -o inter.bin
+          openssl x509 -inform DER -in inter.bin -out inter.pem 2>/dev/null \
+            || cp inter.bin inter.pem
+          cat "$(python -c 'import certifi; print(certifi.where())')" inter.pem \
+            > ca-bundle.pem
+          openssl verify -CAfile ca-bundle.pem folha.pem || true
+          echo "REQUESTS_CA_BUNDLE=$PWD/ca-bundle.pem" >> $GITHUB_ENV
 name: Painel Porto de Santos
 
 on:
